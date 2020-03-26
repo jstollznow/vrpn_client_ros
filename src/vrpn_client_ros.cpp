@@ -176,12 +176,13 @@ namespace vrpn_client_ros
         tracker->pose_msg_.header.stamp = ros::Time::now();
       }
 
-      tracker->pose_msg_.pose.position.x = tracker_pose.pos[0];
-      tracker->pose_msg_.pose.position.y = tracker_pose.pos[1];
+      // translate vrpn_client_ros to Z Up
+      tracker->pose_msg_.pose.position.x = tracker_pose.pos[1] * -1;
+      tracker->pose_msg_.pose.position.y = tracker_pose.pos[0];
       tracker->pose_msg_.pose.position.z = tracker_pose.pos[2];
 
-      tracker->pose_msg_.pose.orientation.x = tracker_pose.quat[0];
-      tracker->pose_msg_.pose.orientation.y = tracker_pose.quat[1];
+      tracker->pose_msg_.pose.orientation.x = tracker_pose.quat[1] * -1;
+      tracker->pose_msg_.pose.orientation.y = tracker_pose.quat[0];
       tracker->pose_msg_.pose.orientation.z = tracker_pose.quat[2];
       tracker->pose_msg_.pose.orientation.w = tracker_pose.quat[3];
 
@@ -211,14 +212,15 @@ namespace vrpn_client_ros
         tracker->transform_stamped_.child_frame_id = tracker->tracker_name;
       }
 
-      tracker->transform_stamped_.transform.translation.x = tracker_pose.pos[0];
-      tracker->transform_stamped_.transform.translation.y = tracker_pose.pos[1];
-      tracker->transform_stamped_.transform.translation.z = tracker_pose.pos[2];
+      // translate vrpn_client_ros to Z Up
+      tracker->pose_msg_.pose.position.x = tracker_pose.pos[1] * -1;
+      tracker->pose_msg_.pose.position.y = tracker_pose.pos[0];
+      tracker->pose_msg_.pose.position.z = tracker_pose.pos[2];
 
-      tracker->transform_stamped_.transform.rotation.x = tracker_pose.quat[0];
-      tracker->transform_stamped_.transform.rotation.y = tracker_pose.quat[1];
-      tracker->transform_stamped_.transform.rotation.z = tracker_pose.quat[2];
-      tracker->transform_stamped_.transform.rotation.w = tracker_pose.quat[3];
+      tracker->pose_msg_.pose.orientation.x = tracker_pose.quat[1] * -1;
+      tracker->pose_msg_.pose.orientation.y = tracker_pose.quat[0];
+      tracker->pose_msg_.pose.orientation.z = tracker_pose.quat[2];
+      tracker->pose_msg_.pose.orientation.w = tracker_pose.quat[3];
 
       tf_broadcaster.sendTransform(tracker->transform_stamped_);
     }
@@ -260,9 +262,10 @@ namespace vrpn_client_ros
       {
         tracker->twist_msg_.header.stamp = ros::Time::now();
       }
-
-      tracker->twist_msg_.twist.linear.x = tracker_twist.vel[0];
-      tracker->twist_msg_.twist.linear.y = tracker_twist.vel[1];
+      
+      // Apply the same transformations and be consistent similar changes were made
+      tracker->twist_msg_.twist.linear.x = tracker_twist.vel[1] * -1;
+      tracker->twist_msg_.twist.linear.y = tracker_twist.vel[0];
       tracker->twist_msg_.twist.linear.z = tracker_twist.vel[2];
 
       double roll, pitch, yaw;
@@ -316,8 +319,9 @@ namespace vrpn_client_ros
         tracker->accel_msg_.header.stamp = ros::Time::now();
       }
 
-      tracker->accel_msg_.accel.linear.x = tracker_accel.acc[0];
-      tracker->accel_msg_.accel.linear.y = tracker_accel.acc[1];
+      // translate acceleration to Z Up
+      tracker->accel_msg_.accel.linear.x = tracker_accel.acc[1] * -1;
+      tracker->accel_msg_.accel.linear.y = tracker_accel.acc[0];
       tracker->accel_msg_.accel.linear.z = tracker_accel.acc[2];
 
       double roll, pitch, yaw;
